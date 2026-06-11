@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sre-bot-collector
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sre-bot-collector
+  template:
+    metadata:
+      labels:
+        app: sre-bot-collector
+    spec:
+      containers:
+      - name: collector
+        image: sre-bot-collector:v0.1
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "500m"
+          limits:
+            memory: "256Mi"
+            cpu: "1000m"
+        ports:
+        - containerPort: 8080
+        envFrom:
+          - configMapRef:
+              name: sre-bot-config

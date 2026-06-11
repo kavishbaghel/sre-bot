@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-
-	"log"
 )
 
 func main() {
@@ -31,9 +29,5 @@ func main() {
 		w.WriteHeader(http.StatusOK)
 		_ = json.NewEncoder(w).Encode(result)
 	})
-	err := http.ListenAndServe(fmt.Sprintf(":%s", cfg.ListenPort), nil)
-	if err != nil {
-		log.Fatalf("Could not start server due to error - %s", err.Error())
-	}
-
+	http.ListenAndServe(fmt.Sprintf(":%s", cfg.ListenPort), nil)
 }
