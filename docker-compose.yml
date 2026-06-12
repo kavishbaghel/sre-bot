@@ -17,3 +17,15 @@ services:
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
       - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
       - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:23.8
+    container_name: clickhouse
+    ports:
+     - 8123:8123
+     - 9000:9000
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse
+  
+volumes:
+  clickhouse-data:
