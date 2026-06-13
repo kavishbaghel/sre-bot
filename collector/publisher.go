@@ -15,6 +15,7 @@ type Publisher struct {
 }
 
 func NewPublisher(brokerAddr, topic string) *Publisher {
+	log.Printf("Creating Publisher")
 	Writer := kafka.NewWriter(kafka.WriterConfig{
 		Brokers:  []string{brokerAddr},
 		Topic:    topic,
@@ -29,6 +30,7 @@ func NewPublisher(brokerAddr, topic string) *Publisher {
 }
 
 func (p *Publisher) Publish(result ScrapeResult) error {
+	log.Printf("Publish scraper results")
 	r, err := json.Marshal(result)
 
 	if err != nil {

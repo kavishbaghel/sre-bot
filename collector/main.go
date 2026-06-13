@@ -9,6 +9,7 @@ import (
 )
 
 func main() {
+	log.Printf("Starting collector... \n")
 	cfg := DefaultConfig()
 
 	if os.Getenv("LISTEN_PORT") != "" {
@@ -41,7 +42,9 @@ func main() {
 			log.Printf("Error while publishing result - %v", err)
 		}
 	})
+	log.Printf("Creating http server on port %s", cfg.ListenPort)
 	if err := http.ListenAndServe(fmt.Sprintf(":%s", cfg.ListenPort), nil); err != nil {
 		log.Fatalf("Error while running http server - %v", err)
 	}
+
 }
