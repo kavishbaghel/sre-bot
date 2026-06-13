@@ -1,0 +1,10 @@
+[project]
+name = "detector"
+version = "0.1.0"
+description = "Service to detect anomaly for sre-bot"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "clickhouse-driver==0.2.10",
+    "python-dotenv==1.0.0",
+]
