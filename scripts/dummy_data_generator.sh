@@ -4,6 +4,7 @@
 
 for i in {1..5}; 
     do 
+    echo "Hitting metrics endpoint to generate data for clickhouse db - loop $i"
     curl -s http://localhost:8080/metrics > /dev/null; 
     sleep 1; 
 done
