@@ -27,5 +27,17 @@ services:
     volumes:
       - clickhouse-data:/var/lib/clickhouse
   
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama-sre-bot
+    ports:
+      - 11434:11434
+    volumes:
+      - ollama:/root/.ollama
+    environment:
+      - OLLAMA_MODEL=llama3.2:3b
+    entrypoint: ["/bin/sh", "-c", "ollama serve & sleep 5 && ollama pull llama3.2:3b && wait"]
+  
 volumes:
   clickhouse-data:
+  ollama:
