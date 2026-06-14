@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sre-bot-collector
+  name: {{ .Values.collector.appName }}
 spec:
   replicas: {{ .Values.collector.replicas }}
   selector:
     matchLabels:
-      app: sre-bot-collector
+      app: {{ .Values.collector.appName }}
   template:
     metadata:
       labels:
-        app: sre-bot-collector
+        app: {{ .Values.collector.appName }}
     spec:
       containers:
       - name: collector

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.agent.appName }}
+spec:
+  replicas: {{ .Values.agent.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.agent.appName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.agent.appName }}
+    spec:
+      containers:
+      - name: agent
+        image: {{ .Values.agent.image }}:{{ .Values.agent.tag }}
+        envFrom:
+          - configMapRef:
+              name: sre-bot-config
+        livenessProbe:
+            exec:
+                command:
+                    - python3
+                    - -c
+                    - "import os; os.getpid()"
+            initialDelaySeconds: 10
+            periodSeconds: 30
+        readinessProbe:
+            exec:
+                command:
+                    - python3
+                    - -c
+                    - "import os; os.getpid()"
+            initialDelaySeconds: 5
+            periodSeconds: 30
+        resources:
+            requests:
+                memory: "128Mi"
+                cpu: "250m"
+            limits:
+                memory: "256Mi"
+                cpu: "500m"

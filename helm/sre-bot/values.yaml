@@ -4,16 +4,19 @@ collector:
   replicas: 1
   scrapeTarget: http://prometheus:9090/metrics
   listenPort: 8080
+  appName: sre-bot-collector
 
 aggregator:
   image: kavishbaghel/sre-bot-aggregator
   tag: latest
   replicas: 1
+  appName: sre-bot-aggregator
 
 detector:
   image: kavishbaghel/sre-bot-detector
   tag: latest
   replicas: 1
+  appName: sre-bot-detector
 
 agent:
   image: kavishbaghel/sre-bot-agent
@@ -21,6 +24,7 @@ agent:
   replicas: 1
   ollamaHost: http://ollama:11434
   ollamaModel: llama3.2:3b
+  appName: sre-bot-agent
 
 kafka:
   broker: kafka:9092
