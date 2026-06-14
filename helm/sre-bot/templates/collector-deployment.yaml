@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sre-bot-collector
+spec:
+  replicas: {{ .Values.collector.replicas }}
+  selector:
+    matchLabels:
+      app: sre-bot-collector
+  template:
+    metadata:
+      labels:
+        app: sre-bot-collector
+    spec:
+      containers:
+      - name: collector
+        image: {{ .Values.collector.image }}:{{ .Values.collector.tag }}
+        ports:
+        - containerPort: 8080
+        envFrom:
+          - configMapRef:
+              name: sre-bot-config
+        livenessProbe:
+            httpGet:
+                path: /health
+                port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 30
+        readinessProbe:
+            httpGet:
+                path: /health
+                port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 30
+        resources:
+            requests:
+                memory: "64Mi"
+                cpu: "250m"
+            limits:
+                memory: "128Mi"
+                cpu: "500m"

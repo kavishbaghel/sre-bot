@@ -1,0 +1,17 @@
+apiVersion: v2
+name: sre-bot
+description: AI-powered SRE agent that watches your infrastructure and diagnoses incidents
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - sre
+  - observability
+  - ai
+  - monitoring
+home: https://github.com/kavishbaghel/sre-bot
+sources:
+  - https://github.com/kavishbaghel/sre-bot
+maintainers:
+  - name: kavishbaghel
+    url: https://github.com/kavishbaghel
