@@ -37,3 +37,10 @@ ns:
   infra_namespace: sre-bot-infra
   app_namespace: sre-bot-apps
   app: sre-bot
+
+zookeeper:
+  name: zookeeper
+  image: confluentinc/cp-zookeeper
+  tag: "7.4.0"
+  client_port: 2181
+  container_port: 2181
