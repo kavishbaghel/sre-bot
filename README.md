@@ -1,6 +1,6 @@
 # sre-bot
 
-> The AI-powered SRE agent that watches your infrastructure, diagnoses incidents, and helps your team resolve them before users notice.
+> The smart SRE agent that watches your infrastructure, diagnoses incidents, and helps your team resolve them before users notice.
 
 [![CI/CD](https://github.com/kavishbaghel/sre-bot/actions/workflows/ci.yaml/badge.svg)](https://github.com/kavishbaghel/sre-bot/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -11,10 +11,6 @@
 
 ## What is sre-bot?
 
-Modern engineering teams spend too much time reacting to incidents instead of preventing them. When something breaks at 3am, the on-call engineer has to open four dashboards, dig through logs, correlate traces, find the right runbook, and figure out what to do — all while the clock is ticking and users are affected.
-
-**sre-bot changes that.** It continuously watches your infrastructure, detects anomalies in real time, and uses an LLM-powered agent to perform root cause analysis and suggest remediations — in plain English, in seconds.
-
 It is not another monitoring dashboard. It is the agent that sits on top of your existing observability stack and tells you what is wrong and what to do about it.
 
 ### Who is it for?
@@ -22,12 +18,6 @@ It is not another monitoring dashboard. It is the agent that sits on top of your
 - **SRE and DevOps teams** who want to reduce mean time to resolution (MTTR) without buying expensive enterprise tooling
 - **Small engineering teams** who cannot afford a dedicated SRE function but need production reliability
 - **Platform engineers** who want to build AI-powered operations tooling on top of a proven open source foundation
-
-### Why not just use Datadog or PagerDuty?
-
-Those tools alert you. sre-bot *thinks*. It correlates signals across metrics, logs, and traces, reads your runbooks, and tells you the most likely root cause with a confidence score and recommended actions. It gets smarter the longer you run it because it learns from your own incident history.
-
----
 
 ## Demo
 
@@ -58,41 +48,6 @@ INFO     Root Cause Analysis
 ```
 
 ---
-
-## Architecture
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                        sre-bot platform                      │
-│                                                             │
-│  ┌───────────┐    ┌─────────┐    ┌─────────────────────┐   │
-│  │ collector │───▶│  Kafka  │───▶│    aggregator        │   │
-│  │   (Go)    │    │  topic  │    │    (Python)          │   │
-│  └───────────┘    └─────────┘    └──────────┬──────────┘   │
-│                                             │               │
-│                                    ┌────────▼────────┐      │
-│                                    │   ClickHouse    │      │
-│                                    │  time-series DB │      │
-│                                    └────────┬────────┘      │
-│                                             │               │
-│                              ┌──────────────▼─────────────┐ │
-│                              │         detector            │ │
-│                              │  anomaly detection (Python) │ │
-│                              └──────────────┬─────────────┘ │
-│                                             │               │
-│                              ┌──────────────▼─────────────┐ │
-│                              │        sre-bot agent        │ │
-│                              │   LLM + RAG + runbooks      │ │
-│                              └─────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
-```
-
-| Component | Language | Role |
-|---|---|---|
-| collector | Go | Scrapes Prometheus `/metrics` endpoints and publishes to Kafka |
-| aggregator | Python | Consumes from Kafka and writes to ClickHouse |
-| detector | Python | Queries ClickHouse on a 30s loop, detects anomalies using sliding window analysis |
-| agent | Python + LLM | ReAct-pattern agent that performs root cause analysis using metrics, logs, and runbooks |
 
 ### Technology choices
 
@@ -222,48 +177,6 @@ ollama pull llama3.1:8b
 OLLAMA_MODEL=llama3.1:8b python3 agent/main.py
 ```
 
----
-
-## Project status
-
-sre-bot is under active development. Here is what works today and what is coming:
-
-| Feature | Status |
-|---|---|
-| Prometheus metrics collection | ✅ Production ready |
-| Kafka message pipeline | ✅ Production ready |
-| ClickHouse time-series storage | ✅ Production ready |
-| Sliding window anomaly detection | ✅ Production ready |
-| LLM root cause analysis | ✅ Working — local Ollama |
-| Runbook-aware agent | ✅ Working |
-| Kubernetes + Helm deployment | ✅ Working |
-| GitHub Actions CI/CD | ✅ Working |
-| Web dashboard + chat UI | 🚧 In progress (v0.2) |
-| Slack integration | 🚧 In progress (v0.2) |
-| Email alerts | 🚧 In progress (v0.2) |
-| Istio service mesh | 📋 Planned (v0.3) |
-| ArgoCD GitOps | 📋 Planned (v0.3) |
-| OpenTelemetry instrumentation | 📋 Planned (v0.3) |
-| Conversational memory | 📋 Planned (v0.4) |
-| Auto postmortem generation | 📋 Planned (v0.4) |
-
----
-
-## Roadmap
-
-### v0.2 — Make it usable
-Web dashboard with health overview and chat interface. Slack and email alert integrations. Multi-target Prometheus discovery. Persistent incident history.
-
-### v0.3 — Make it trustworthy
-Istio service mesh with mTLS. OpenTelemetry instrumentation across all services. ArgoCD GitOps deployment. Jaeger distributed tracing. Human approval workflow for agent remediations.
-
-### v0.4 — Make it intelligent
-Conversational agent with memory across incidents. OPA policy engine for safe automated actions. Auto postmortem generation. HashiCorp Vault for secret management.
-
-### v1.0 — Enterprise ready
-Multi-tenancy with per-team isolation. SSO and RBAC. Litmus chaos engineering integration. Integrations with PagerDuty, Jira, and Grafana.
-
----
 
 ## Contributing
 
