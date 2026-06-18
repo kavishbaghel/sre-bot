@@ -1,7 +1,8 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: sre-bot-config
+  name: {{ .Values.ns.app }}-config
+  namespace: {{ .Values.ns.app_namespace }}
 data:
   SCRAPE_TARGET: "{{ .Values.collector.scrapeTarget }}"
   LISTEN_PORT: "{{ .Values.collector.listenPort }}"

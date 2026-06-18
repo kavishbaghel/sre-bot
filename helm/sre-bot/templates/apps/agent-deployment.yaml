@@ -1,20 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.aggregator.appName }}
+  name: {{ .Values.agent.appName }}
+  namespace: {{ .Values.ns.app_namespace }}
 spec:
-  replicas: {{ .Values.aggregator.replicas }}
+  replicas: {{ .Values.agent.replicas }}
   selector:
     matchLabels:
-      app: {{ .Values.aggregator.appName }}
+      app: {{ .Values.agent.appName }}
   template:
     metadata:
       labels:
-        app: {{ .Values.aggregator.appName }}
+        app: {{ .Values.agent.appName }}
     spec:
       containers:
       - name: agent
-        image: {{ .Values.aggregator.image }}:{{ .Values.aggregator.tag }}
+        image: {{ .Values.agent.image }}:{{ .Values.agent.tag }}
         envFrom:
           - configMapRef:
               name: sre-bot-config
