@@ -32,3 +32,8 @@ kafka:
 
 clickhouse:
   host: clickhouse
+
+ns:
+  infra_namespace: sre-bot-infra
+  app_namespace: sre-bot-apps
+  app: sre-bot
