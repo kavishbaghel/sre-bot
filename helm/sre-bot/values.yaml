@@ -1,5 +1,5 @@
 collector:
-  image: kavishbaghel/sre-bot-collector
+  image: sre-bot-collector
   tag: latest
   replicas: 1
   scrapeTarget: http://prometheus:9090/metrics
@@ -7,31 +7,31 @@ collector:
   appName: sre-bot-collector
 
 aggregator:
-  image: kavishbaghel/sre-bot-aggregator
+  image: sre-bot-aggregator
   tag: latest
   replicas: 1
   appName: sre-bot-aggregator
 
 detector:
-  image: kavishbaghel/sre-bot-detector
+  image: sre-bot-detector
   tag: latest
   replicas: 1
   appName: sre-bot-detector
 
 agent:
-  image: kavishbaghel/sre-bot-agent
+  image: sre-bot-agent
   tag: latest
   replicas: 1
-  ollamaHost: http://ollama:11434
+  ollamaHost: http://ollama.sre-bot-infra.svc.cluster.local:11434
   ollamaModel: llama3.2:3b
   appName: sre-bot-agent
 
 kafka:
-  broker: kafka:9092
+  broker: kafka.sre-bot-infra.svc.cluster.local:9092
   topic: metrics
 
 clickhouse:
-  host: clickhouse
+  host: clickhouse.sre-bot-infra.svc.cluster.local
 
 ns:
   infra_namespace: sre-bot-infra
