@@ -42,7 +42,7 @@ clickhouse:
   service_port: 9000
   image: clickhouse/clickhouse-server
   tag: "23.8"
-  
+
 
 ns:
   infra_namespace: sre-bot-infra
@@ -55,3 +55,11 @@ zookeeper:
   tag: "7.4.0"
   client_port: 2181
   container_port: 2181
+
+ollama:
+  name: ollama
+  image: ollama/ollama
+  tag: latest
+  container_port: 11434
+  ollama_model: llama3.2:3b
+  
