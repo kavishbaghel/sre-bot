@@ -27,8 +27,12 @@ agent:
   appName: sre-bot-agent
 
 kafka:
+  name: kafka
+  image: confluentinc/cp-kafka
+  tag: "7.4.0"
   broker: kafka.sre-bot-infra.svc.cluster.local:9092
   topic: metrics
+  container_port: 9092
 
 clickhouse:
   host: clickhouse.sre-bot-infra.svc.cluster.local
