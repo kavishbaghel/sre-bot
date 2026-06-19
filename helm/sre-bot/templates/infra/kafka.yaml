@@ -28,3 +28,14 @@ spec:
                       value: "1"
                   ports:
                     - containerPort: {{ .Values.kafka.container_port }}
+                  volumeMounts:
+                    - name: kafka-data
+                      mountPath: /var/lib/kafka/data
+    volumeClaimTemplates:
+      - metadata:
+          name: kafka-data
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi

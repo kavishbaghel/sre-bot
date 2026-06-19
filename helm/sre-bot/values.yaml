@@ -36,7 +36,13 @@ kafka:
   client_port: 9092
 
 clickhouse:
+  name: clickhouse
   host: clickhouse.sre-bot-infra.svc.cluster.local
+  container_port: 8123
+  service_port: 9000
+  image: clickhouse/clickhouse-server
+  tag: "23.8"
+  
 
 ns:
   infra_namespace: sre-bot-infra

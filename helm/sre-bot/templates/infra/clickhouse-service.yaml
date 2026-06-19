@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: {{ .Values.clickhouse.name }}
+    namespace: {{ .Values.ns.infra_namespace }}
+spec:
+    selector:
+        app: {{ .Values.clickhouse.name }}
+    ports:
+        - name: container
+          port: {{ .Values.clickhouse.container_port }}
+          targetPort: {{ .Values.clickhouse.container_port }}
+        - name: service
+          port: {{ .Values.clickhouse.service_port }}
+          targetPort: {{ .Values.clickhouse.service_port }}

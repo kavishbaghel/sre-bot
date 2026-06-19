@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+    name: {{ .Values.clickhouse.name }}
+    namespace: {{ .Values.ns.infra_namespace }}
+spec:
+    serviceName: {{ .Values.clickhouse.name }}
+    replicas: 1
+    selector:
+        matchLabels:
+            app: {{ .Values.clickhouse.name }}
+    template:
+        metadata:
+            labels:
+                app: {{ .Values.clickhouse.name }}
+        spec:
+            containers:
+                - name: {{ .Values.clickhouse.name }}
+                  image: {{ .Values.clickhouse.image }}:{{ .Values.clickhouse.tag }}
+                  ports:
+                    - containerPort: {{ .Values.clickhouse.container_port }}
+                    - containerPort: {{ .Values.clickhouse.service_port }}
+                  volumeMounts:
+                      - name: clickhouse-data
+                        mountPath: /var/lib/clickhouse
+    volumeClaimTemplates:
+        - metadata:
+            name: clickhouse-data
+          spec:
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 5Gi

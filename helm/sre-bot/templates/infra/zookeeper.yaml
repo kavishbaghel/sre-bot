@@ -22,3 +22,14 @@ spec:
                       value: "{{ .Values.zookeeper.client_port }}"
                   ports:
                     - containerPort: {{ .Values.zookeeper.container_port }}
+                  volumeMounts:
+                    - name: zookeeper-data
+                      mountPath: /var/lib/zookeeper/data
+    volumeClaimTemplates:
+      - metadata:
+          name: zookeeper-data
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi
