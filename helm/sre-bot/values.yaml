@@ -33,6 +33,7 @@ kafka:
   broker: kafka.sre-bot-infra.svc.cluster.local:9092
   topic: metrics
   container_port: 9092
+  client_port: 9092
 
 clickhouse:
   host: clickhouse.sre-bot-infra.svc.cluster.local
