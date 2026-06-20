@@ -16,6 +16,7 @@ spec:
       containers:
       - name: agent
         image: {{ .Values.agent.image }}:{{ .Values.agent.tag }}
+        imagePullPolicy: IfNotPresent
         envFrom:
           - configMapRef:
               name: sre-bot-config
