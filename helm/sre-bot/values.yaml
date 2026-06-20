@@ -1,6 +1,6 @@
 collector:
   image: sre-bot-collector
-  tag: latest
+  tag: v0.1
   replicas: 1
   scrapeTarget: http://prometheus:9090/metrics
   listenPort: 8080
@@ -8,19 +8,19 @@ collector:
 
 aggregator:
   image: sre-bot-aggregator
-  tag: latest
+  tag: v0.1
   replicas: 1
   appName: sre-bot-aggregator
 
 detector:
   image: sre-bot-detector
-  tag: latest
+  tag: v0.1
   replicas: 1
   appName: sre-bot-detector
 
 agent:
   image: sre-bot-agent
-  tag: latest
+  tag: v0.1
   replicas: 1
   ollamaHost: http://ollama.sre-bot-infra.svc.cluster.local:11434
   ollamaModel: llama3.2:3b

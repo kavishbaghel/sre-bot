@@ -2,7 +2,7 @@ apiVersion: v2
 name: sre-bot
 description: AI-powered SRE agent that watches your infrastructure and diagnoses incidents
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: "0.1.0"
 keywords:
   - sre

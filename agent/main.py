@@ -3,11 +3,10 @@ import sys
 from agent import SREAgent
 import logging
 import time
+from analyzer import Analyzer
 
 logging.basicConfig(level=logging.INFO)
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'detector'))
-from analyzer import Analyzer
 
 LLM_BACKEND = os.getenv("LLM_BACKEND", "http://localhost:11434")
 LLM_MODEL = os.getenv("LLM_MODEL", "llama3.2:3b")
