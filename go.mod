@@ -2,11 +2,13 @@ module github.com/kavishbaghel/sre-bot
 
 go 1.26.1
 
-require github.com/segmentio/kafka-go v0.4.51
+require (
+	github.com/ClickHouse/clickhouse-go/v2 v2.46.0
+	github.com/segmentio/kafka-go v0.4.51
+)
 
 require (
 	github.com/ClickHouse/ch-go v0.71.0 // indirect
-	github.com/ClickHouse/clickhouse-go/v2 v2.46.0 // indirect
 	github.com/andybalholm/brotli v1.2.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/go-faster/city v1.0.1 // indirect

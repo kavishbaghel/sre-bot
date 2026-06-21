@@ -3,6 +3,7 @@ FROM golang:1.26-alpine as builder
 WORKDIR /app
 
 COPY go.mod .
+COPY go.sum .
 
 RUN go mod download
 
@@ -15,7 +16,5 @@ FROM alpine:latest
 WORKDIR /app
 
 COPY --from=builder /app/aggregator .
-
-EXPOSE 8080
 
 CMD ["./aggregator"]
