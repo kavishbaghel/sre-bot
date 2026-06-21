@@ -24,6 +24,6 @@ if __name__ == "__main__":
             else:
                 logging.info("No anomaly detected")
         except Exception as e:
-            logging.error("Error occured while analysis - %s", e)
+            logging.error("Error occured while analysis - %s", e, exc_info=True)
         time.sleep(30)
 

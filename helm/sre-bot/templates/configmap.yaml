@@ -9,5 +9,5 @@ data:
   KAFKA_BROKER: "{{ .Values.kafka.broker }}"
   KAFKA_TOPIC: "{{ .Values.kafka.topic }}"
   CLICKHOUSE_HOST: "{{ .Values.clickhouse.host }}"
-  OLLAMA_HOST: "{{ .Values.agent.ollamaHost }}"
-  OLLAMA_MODEL: "{{ .Values.agent.ollamaModel }}"
+  LLM_BACKEND: "{{ .Values.agent.ollamaHost }}"
+  LLM_MODEL: "{{ .Values.agent.ollamaModel }}"
