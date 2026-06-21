@@ -1,11 +1,20 @@
-FROM python:3.13-slim
+FROM golang:1.26-alpine as builder
 
 WORKDIR /app
 
-COPY requirements.txt .
+COPY go.mod .
+COPY go.sum .
 
-RUN pip install -r requirements.txt
+RUN go mod download
 
-COPY . .
+COPY aggregator/ .
 
-CMD ["python3", "main.py"]
+RUN go build -o aggregator .
+
+FROM alpine:latest
+
+WORKDIR /app
+
+COPY --from=builder /app/aggregator .
+
+CMD ["./aggregator"]

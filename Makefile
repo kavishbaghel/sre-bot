@@ -1,11 +1,21 @@
 IMAGE_REPO ?= repo-url
 USERNAME ?= username
 
-build:
+build-collector:
 	docker build -t sre-bot-collector:v0.1 -f collector/Dockerfile .
+	kind load docker-image sre-bot-collector:v0.1 --name sre-bot
+
+build-agent:
 	docker build -t sre-bot-agent:v0.1 -f agent/Dockerfile .
+	kind load docker-image sre-bot-agent:v0.1 --name sre-bot
+
+build-aggregator:
 	docker build -t sre-bot-aggregator:v0.1 -f aggregator/Dockerfile .
+	kind load docker-image sre-bot-aggregator:v0.1 --name sre-bot
+
+build-detector:
 	docker build -t sre-bot-detector:v0.1 -f detector/Dockerfile .
+	kind load docker-image sre-bot-detector:v0.1 --name sre-bot
 
 push:
 	docker login -u $(USERNAME)

@@ -61,5 +61,7 @@ ollama:
   image: ollama/ollama
   tag: latest
   container_port: 11434
-  ollama_model: llama3.2:3b
+  llm_model: llama3.2:3b
+  llm_backend: http://ollama.sre-bot-infra.svc.cluster.local:11434
+
   

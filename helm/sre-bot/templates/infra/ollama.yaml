@@ -19,8 +19,10 @@ spec:
           ports:
             - containerPort: {{ .Values.ollama.container_port }}
           env:
-            - name: OLLAMA_MODEL
-              value: {{ .Values.ollama.ollama_model }}
+            - name: LLM_MODEL
+              value: {{ .Values.ollama.llm_model }}
+            - name: LLM_BACKEND
+              value: {{ .Values.ollama.llm_backend }}
           volumeMounts:
             - name: ollama-data
               mountPath: /root/.ollama
