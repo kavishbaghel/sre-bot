@@ -23,17 +23,17 @@ spec:
         livenessProbe:
             exec:
                 command:
-                    - python3
+                    - /bin/sh
                     - -c
-                    - "import os; os.getpid()"
+                    - "pgrep aggregator"
             initialDelaySeconds: 10
             periodSeconds: 30
         readinessProbe:
             exec:
                 command:
-                    - python3
+                    - /bin/sh
                     - -c
-                    - "import os; os.getpid()"
+                    - "pgrep aggregator"
             initialDelaySeconds: 5
             periodSeconds: 30
         resources:
