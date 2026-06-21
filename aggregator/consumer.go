@@ -50,7 +50,6 @@ func (consumer *Consumer) Consume(ctx context.Context) error {
 		}
 		log.Printf("Result inserted successfully for Target %s scraped at %v", result.Target, result.ScrapedAt)
 	}
-	return nil
 }
 
 func (consumer *Consumer) Close() error {
