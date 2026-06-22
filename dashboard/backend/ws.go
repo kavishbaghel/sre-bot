@@ -32,3 +32,19 @@ func (hub *Hub) Run() {
 		hub.mu.Unlock()
 	}
 }
+
+func (hub *Hub) AddClient(conn *websocket.Conn) {
+	hub.mu.Lock()
+	hub.clients[conn] = true
+	hub.mu.Unlock()
+}
+
+func (hub *Hub) RemoveClient(conn *websocket.Conn) {
+	hub.mu.Lock()
+	delete(hub.clients, conn)
+	hub.mu.Unlock()
+}
+
+func (hub *Hub) Broadcast(msg []byte) {
+	hub.broadcast <- msg
+}
