@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -28,7 +29,7 @@ func NewDB(host string) (*DB, error) {
 }
 
 func (db *DB) GetRecentMetrics(ctx context.Context, minutes int) ([]map[string]interface{}, error) {
-	metrics_query := "SELECT target, success, error, scraped_at FROM metrics WHERE scraped_at >= now() - INTERVAL ? MINUTE ORDER BY scraped_at DESC LIMIT 50"
+	metrics_query := fmt.Sprintf("SELECT target, success, error, scraped_at FROM metrics WHERE scraped_at >= now() - INTERVAL %d MINUTE ORDER BY scraped_at DESC LIMIT 50", minutes)
 	rows, err := db.conn.Query(ctx, metrics_query)
 	if err != nil {
 		log.Printf("Could not fetch recent metrics from db - %v", err)
@@ -58,7 +59,7 @@ func (db *DB) GetRecentMetrics(ctx context.Context, minutes int) ([]map[string]i
 }
 
 func (db *DB) GetFailureSummary(ctx context.Context, minutes int) ([]map[string]interface{}, error) {
-	failures_query := "SELECT error, count(*) as count FROM metrics WHERE success = 0 AND scraped_at >= now() - INTERVAL ? MINUTE GROUP BY error ORDER BY count DESC"
+	failures_query := fmt.Sprintf("SELECT error, count(*) as count FROM metrics WHERE success = 0 AND scraped_at >= now() - INTERVAL %d MINUTE GROUP BY error ORDER BY count DESC", minutes)
 	rows, err := db.conn.Query(ctx, failures_query)
 	if err != nil {
 		log.Printf("Error while fetching failures - %v", err)
@@ -68,7 +69,7 @@ func (db *DB) GetFailureSummary(ctx context.Context, minutes int) ([]map[string]
 	for rows.Next() {
 		var (
 			errMsg string
-			count  uint32
+			count  uint64
 		)
 		if err := rows.Scan(&errMsg, &count); err != nil {
 			log.Printf("Could not scan rows for error details and count - %v", err)
@@ -93,9 +94,9 @@ func (db *DB) GetHealthStatus(ctx context.Context) (map[string]interface{}, erro
 		log.Printf("Error while fetching metrics count - %v", err)
 		return nil, err
 	}
-	var metrics_count uint32
+	var metrics_count uint64
 	for rows.Next() {
-		var count uint32
+		var count uint64
 		if err := rows.Scan(&count); err != nil {
 			log.Printf("Error while scanning metrics count row - %v", err)
 			return nil, err
@@ -109,9 +110,9 @@ func (db *DB) GetHealthStatus(ctx context.Context) (map[string]interface{}, erro
 		log.Printf("Error while fetching failures count - %v", err)
 		return nil, err
 	}
-	var failures_count uint32
+	var failures_count uint64
 	for failure_rows.Next() {
-		var count uint32
+		var count uint64
 		if err := failure_rows.Scan(&count); err != nil {
 			log.Printf("Error while scanning metrics count row - %v", err)
 			return nil, err

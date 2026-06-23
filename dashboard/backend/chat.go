@@ -75,10 +75,11 @@ func (ch *ChatHandler) Chat(ctx context.Context, userMessage string) (string, er
 		host,
 		http.DefaultClient,
 	)
-	finalPrompt := fmt.Sprintf("%s\n\nUser: %s", prompt, userMessage)
+	// finalPrompt := fmt.Sprintf("%s\n\nUser: %s", prompt, userMessage)
 	var req = &ollama.GenerateRequest{
 		Model:  ch.llmModel,
-		Prompt: finalPrompt,
+		Prompt: userMessage,
+		System: prompt,
 	}
 	var responseText string
 	respFunc := func(r ollama.GenerateResponse) error {
