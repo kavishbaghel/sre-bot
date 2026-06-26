@@ -25,7 +25,7 @@ func main() {
 	}
 	LISTEN_PORT := os.Getenv("LISTEN_PORT")
 	if LISTEN_PORT == "" {
-		LISTEN_PORT = "3000"
+		LISTEN_PORT = "8081"
 	}
 
 	// Create clickhouse db connection
