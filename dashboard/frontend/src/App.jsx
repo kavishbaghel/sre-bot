@@ -1,20 +1,24 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import HealthCard from './components/HealthCard'
+import Sidebar from './components/Sidebar'
+import StatsBar from './components/StatsBar'
 import MetricsFeed from './components/MetricsFeed'
+import FailureSummary from './components/FailureSummary'
 import ChatWindow from './components/ChatWindow'
+import IncidentsPage from './components/IncidentsPage'
 
 export default function App() {
-  const [healthy, setHealthy] = useState(true)
-  // Track which tab is active — dashboard is default
   const [activeTab, setActiveTab] = useState('dashboard')
+  // Sidebar starts expanded on desktop
+  const [collapsed, setCollapsed] = useState(false)
+  const [healthy, setHealthy] = useState(true)
 
   useEffect(() => {
     const fetchHealth = async () => {
       try {
         const res = await axios.get('/api/health')
         setHealthy(res.data.healthy)
-      } catch (err) {
+      } catch {
         setHealthy(false)
       }
     }
@@ -24,66 +28,82 @@ export default function App() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
-      {/* Navigation bar */}
-      <nav className="bg-gray-900 border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between h-14">
-            {/* Logo and brand */}
-            <div className="flex items-center gap-3">
-              {/* Colored dot as a simple logo */}
-              <div className={`w-2.5 h-2.5 rounded-full ${healthy ? 'bg-green-400' : 'bg-red-400'}`} />
-              <span className="text-lg font-semibold tracking-tight">sre-bot</span>
-              <span className="text-xs text-gray-500 bg-gray-800 px-2 py-0.5 rounded-full">v0.2</span>
-            </div>
+    // flex = sidebar and main content sit side by side
+    // h-screen = fill the entire viewport height
+    <div className="flex h-screen bg-gray-950 text-gray-100">
 
-            {/* Tab navigation */}
-            <div className="flex gap-1">
-              {/* Each tab button — active tab gets a highlighted style */}
-              {/* onClick sets the active tab, triggering a re-render */}
-              {['dashboard', 'chat'].map(tab => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`px-4 py-2 text-sm rounded-md transition-colors ${
-                    activeTab === tab
-                      ? 'bg-gray-800 text-white'
-                      : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/50'
-                  }`}
-                >
-                  {/* Capitalize first letter */}
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </button>
-              ))}
-            </div>
+      {/* Sidebar — receives state as props */}
+      <Sidebar
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+      />
 
-            {/* Status badge */}
+      {/* Main content area */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Top bar */}
+        <header className="h-14 bg-gray-900 border-b border-gray-800 flex items-center justify-between px-6">
+          {/* Page title — changes based on active tab */}
+          <h1 className="text-sm font-semibold">
+            {activeTab === 'dashboard' && 'Dashboard'}
+            {activeTab === 'incidents' && 'Incidents'}
+            {activeTab === 'chat' && 'Chat'}
+            {activeTab === 'settings' && 'Settings'}
+          </h1>
+
+          {/* Right side — status indicator */}
+          <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <div className={`w-2 h-2 rounded-full ${healthy ? 'bg-green-400 animate-pulse' : 'bg-red-400 animate-pulse'}`} />
-              <span className={`text-sm ${healthy ? 'text-green-400' : 'text-red-400'}`}>
+              {/* Animated pulse dot for live status */}
+              <span className="relative flex h-2 w-2">
+                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${healthy ? 'bg-green-400' : 'bg-red-400'}`} />
+                <span className={`relative inline-flex rounded-full h-2 w-2 ${healthy ? 'bg-green-500' : 'bg-red-500'}`} />
+              </span>
+              <span className={`text-xs ${healthy ? 'text-green-400' : 'text-red-400'}`}>
                 {healthy ? 'All systems operational' : 'Issues detected'}
               </span>
             </div>
           </div>
-        </div>
-      </nav>
+        </header>
 
-      {/* Main content — switches based on active tab */}
-      <main className="max-w-7xl mx-auto p-4">
-        {activeTab === 'dashboard' && (
-          <div className="space-y-4">
-            <HealthCard />
-            <MetricsFeed />
-          </div>
-        )}
+        {/* Page content — scrollable */}
+        <main className="flex-1 overflow-y-auto p-6">
+          {/* Dashboard page */}
+          {activeTab === 'dashboard' && (
+            <div className="space-y-4">
+              <StatsBar />
+              {/* Two column layout — metrics table wider, failure summary narrower */}
+              <div className="grid grid-cols-3 gap-4">
+                <div className="col-span-2">
+                  <MetricsFeed />
+                </div>
+                <div className="col-span-1">
+                  <FailureSummary />
+                </div>
+              </div>
+            </div>
+          )}
 
-        {activeTab === 'chat' && (
-          // h-[calc(100vh-120px)] fills the remaining viewport height
-          <div className="h-[calc(100vh-120px)]">
-            <ChatWindow />
-          </div>
-        )}
-      </main>
+          {/* Incidents page */}
+          {activeTab === 'incidents' && <IncidentsPage />}
+
+          {/* Chat page */}
+          {activeTab === 'chat' && (
+            <div className="h-[calc(100vh-120px)]">
+              <ChatWindow />
+            </div>
+          )}
+
+          {/* Settings page — placeholder for now */}
+          {activeTab === 'settings' && (
+            <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+              <h2 className="text-sm font-semibold mb-4">Settings</h2>
+              <p className="text-sm text-gray-500">Configuration options will be available in a future release.</p>
+            </div>
+          )}
+        </main>
+      </div>
     </div>
   )
 }
