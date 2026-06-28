@@ -48,6 +48,7 @@ ns:
   infra_namespace: sre-bot-infra
   app_namespace: sre-bot-apps
   app: sre-bot
+  monitoring_namespace: sre-bot-monitoring
 
 zookeeper:
   name: zookeeper
@@ -70,5 +71,12 @@ dashboard:
   tag: latest
   replicas: 1
   listenPort: 8081
+  container_port: 8081
+
+prometheus:
+  name: prometheus
+  image: prom/prometheus
+  tag: "v2.48.0"
+
 
   
