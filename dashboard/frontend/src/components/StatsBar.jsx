@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Heart, Database, AlertTriangle, TrendingUp } from 'lucide-react'
+import { Shield, Database, AlertTriangle, Activity } from 'lucide-react'
 
 export default function StatsBar() {
   const [health, setHealth] = useState(null)
@@ -23,23 +23,22 @@ export default function StatsBar() {
     return (
       <div className="grid grid-cols-4 gap-4 animate-pulse">
         {[1, 2, 3, 4].map(i => (
-          <div key={i} className="bg-gray-900 border border-gray-800 rounded-xl h-24" />
+          <div key={i} className="bg-gray-900/80 border border-gray-800/50 rounded-xl h-[104px]" />
         ))}
       </div>
     )
   }
 
-  // Define all four stat cards as an array
-  // Each card has an icon, label, value, trend indicator, and color scheme
   const stats = [
     {
-      icon: Heart,
+      icon: Shield,
       label: 'System health',
       value: health.healthy ? 'Operational' : 'Degraded',
-      sub: health.healthy ? 'All services running' : 'Issues detected',
-      iconColor: health.healthy ? 'text-green-400' : 'text-red-400',
-      iconBg: health.healthy ? 'bg-green-400/10' : 'bg-red-400/10',
-      valueColor: health.healthy ? 'text-green-400' : 'text-red-400',
+      sub: health.healthy ? 'All checks passing' : 'Action required',
+      iconColor: health.healthy ? 'text-emerald-400' : 'text-red-400',
+      iconBg: health.healthy ? 'bg-emerald-500/10 border-emerald-500/20' : 'bg-red-500/10 border-red-500/20',
+      valueColor: health.healthy ? 'text-emerald-400' : 'text-red-400',
+      glow: health.healthy ? 'glow-green' : 'glow-red',
     },
     {
       icon: Database,
@@ -47,26 +46,29 @@ export default function StatsBar() {
       value: health.total.toLocaleString(),
       sub: 'Last 5 minutes',
       iconColor: 'text-blue-400',
-      iconBg: 'bg-blue-400/10',
+      iconBg: 'bg-blue-500/10 border-blue-500/20',
       valueColor: 'text-white',
+      glow: '',
     },
     {
       icon: AlertTriangle,
       label: 'Failures',
       value: health.failures.toLocaleString(),
-      sub: health.failures > 0 ? 'Needs attention' : 'No failures',
-      iconColor: health.failures > 0 ? 'text-amber-400' : 'text-green-400',
-      iconBg: health.failures > 0 ? 'bg-amber-400/10' : 'bg-green-400/10',
+      sub: health.failures > 0 ? 'Needs investigation' : 'No issues detected',
+      iconColor: health.failures > 0 ? 'text-amber-400' : 'text-emerald-400',
+      iconBg: health.failures > 0 ? 'bg-amber-500/10 border-amber-500/20' : 'bg-emerald-500/10 border-emerald-500/20',
       valueColor: health.failures > 0 ? 'text-amber-400' : 'text-white',
+      glow: '',
     },
     {
-      icon: TrendingUp,
+      icon: Activity,
       label: 'Failure rate',
       value: `${(health.failure_rate * 100).toFixed(1)}%`,
-      sub: health.failure_rate > 0.5 ? 'Critical' : health.failure_rate > 0.2 ? 'Warning' : 'Normal',
-      iconColor: health.failure_rate > 0.5 ? 'text-red-400' : health.failure_rate > 0.2 ? 'text-amber-400' : 'text-green-400',
-      iconBg: health.failure_rate > 0.5 ? 'bg-red-400/10' : health.failure_rate > 0.2 ? 'bg-amber-400/10' : 'bg-green-400/10',
+      sub: health.failure_rate > 0.5 ? 'Critical threshold' : health.failure_rate > 0.2 ? 'Elevated' : 'Within limits',
+      iconColor: health.failure_rate > 0.5 ? 'text-red-400' : health.failure_rate > 0.2 ? 'text-amber-400' : 'text-emerald-400',
+      iconBg: health.failure_rate > 0.5 ? 'bg-red-500/10 border-red-500/20' : health.failure_rate > 0.2 ? 'bg-amber-500/10 border-amber-500/20' : 'bg-emerald-500/10 border-emerald-500/20',
       valueColor: health.failure_rate > 0.5 ? 'text-red-400' : 'text-white',
+      glow: '',
     },
   ]
 
@@ -75,16 +77,15 @@ export default function StatsBar() {
       {stats.map((stat, i) => {
         const Icon = stat.icon
         return (
-          <div key={i} className="bg-gray-900 border border-gray-800 rounded-xl p-4 hover:border-gray-700 transition-colors">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs text-gray-500">{stat.label}</span>
-              {/* Icon with colored background circle */}
-              <div className={`w-8 h-8 rounded-lg ${stat.iconBg} flex items-center justify-center`}>
+          <div key={i} className="card-hover bg-gray-900/80 border border-gray-800/50 rounded-xl p-4 backdrop-blur-sm">
+            <div className="flex items-start justify-between mb-3">
+              <span className="text-[11px] text-gray-500 font-medium uppercase tracking-wider">{stat.label}</span>
+              <div className={`w-8 h-8 rounded-lg border ${stat.iconBg} flex items-center justify-center ${stat.glow}`}>
                 <Icon className={`w-4 h-4 ${stat.iconColor}`} />
               </div>
             </div>
-            <p className={`text-xl font-bold ${stat.valueColor}`}>{stat.value}</p>
-            <p className="text-xs text-gray-500 mt-1">{stat.sub}</p>
+            <p className={`text-[22px] font-bold tracking-tight ${stat.valueColor}`}>{stat.value}</p>
+            <p className="text-[11px] text-gray-500 mt-1.5">{stat.sub}</p>
           </div>
         )
       })}
