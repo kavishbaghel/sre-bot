@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.dashboard.appName }}
+  namespace: {{ .Values.ns.app_namespace }}
+spec:
+  replicas: {{ .Values.dashboard.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.dashboard.appName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.dashboard.appName }}
+    spec:
+      containers:
+      - name: {{ .Values.dashboard.appName }}
+        image: {{ .Values.dashboard.image }}:{{ .Values.dashboard.tag }}
+        imagePullPolicy: IfNotPresent
+        ports:
+         - containerPort: {{ .Values.dashboard.listenPort }}
+        envFrom:
+          - configMapRef:
+              name: sre-bot-config
+        env:
+          - name: LISTEN_PORT
+            value: "8081"
+        livenessProbe:
+            httpGet:
+                path: /api/health
+                port: 8081
+            initialDelaySeconds: 10
+            periodSeconds: 30
+        readinessProbe:
+            httpGet:
+                path: /api/health
+                port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 30
+        resources:
+            requests:
+                memory: "128Mi"
+                cpu: "250m"
+            limits:
+                memory: "256Mi"
+                cpu: "500m"

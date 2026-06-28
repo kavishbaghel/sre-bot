@@ -17,6 +17,10 @@ build-detector:
 	docker build -t sre-bot-detector:v0.1 -f detector/Dockerfile .
 	kind load docker-image sre-bot-detector:v0.1 --name sre-bot
 
+build-dashboard:
+	docker build -t kavishbaghel/sre-bot-dashboard:latest -f dashboard/Dockerfile .
+	kind load docker-image kavishbaghel/sre-bot-dashboard:latest --name sre-bot
+
 push:
 	docker login -u $(USERNAME)
 	docker tag sre-bot-collector:v0.1 $(IMAGE_REPO)/sre-bot-collector:v0.1
@@ -27,6 +31,12 @@ push:
 	docker push $(IMAGE_REPO)/sre-bot-aggregator:v0.1
 	docker tag sre-bot-detector:v0.1 $(IMAGE_REPO)/sre-bot-detector:v0.1
 	docker push $(IMAGE_REPO)/sre-bot-detector:v0.1
+	docker tag sre-bot-dashboard:v0.1 $(IMAGE_REPO)/sre-bot-dashboard:v0.1
+	docker push $(IMAGE_REPO)/sre-bot-dashboard:v0.1
+
+helm-upgrade:
+	helm upgrade sre-bot ./helm/sre-bot
+
 
 up:
 	docker-compose up -d

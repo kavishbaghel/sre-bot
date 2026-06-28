@@ -20,9 +20,9 @@ func main() {
 	if CLICKHOUSE_HOST == "" {
 		CLICKHOUSE_HOST = "localhost"
 	}
-	LLM_HOST := os.Getenv("LLM_HOST")
-	if LLM_HOST == "" {
-		LLM_HOST = "http://localhost:11434"
+	LLM_BACKEND := os.Getenv("LLM_BACKEND")
+	if LLM_BACKEND == "" {
+		LLM_BACKEND = "http://localhost:11434"
 	}
 	LLM_MODEL := os.Getenv("LLM_MODEL")
 	if LLM_MODEL == "" {
@@ -43,7 +43,7 @@ func main() {
 	hub := NewHub()
 
 	// Create Chat Handler
-	ch := NewChatHandler(db, LLM_HOST, LLM_MODEL)
+	ch := NewChatHandler(db, LLM_BACKEND, LLM_MODEL)
 
 	// Create handler
 	handler := NewHandlers(db, hub, ch)

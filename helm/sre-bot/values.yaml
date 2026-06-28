@@ -64,4 +64,11 @@ ollama:
   llm_model: llama3.2:3b
   llm_backend: http://ollama.sre-bot-infra.svc.cluster.local:11434
 
+dashboard:
+  appName: sre-bot-dashboard
+  image: kavishbaghel/sre-bot-dashboard
+  tag: latest
+  replicas: 1
+  listenPort: 8081
+
   
