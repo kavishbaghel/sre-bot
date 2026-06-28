@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: {{ .Values.prometheus.name }}
+    namespace: {{ .Values.ns.monitoring_namespace }}
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: {{ .Values.prometheus.name }}
+    template:
+      metadata:
+            labels:
+                app: {{ .Values.prometheus.name }}
+      spec:
+        serviceAccountName: {{ .Values.prometheus.name }}-sa
+        containers:
+          - name: prometheus
+            image: {{ .Values.prometheus.image }}:{{ .Values.prometheus.tag }}
+            ports:
+              - containerPort: {{ .Values.prometheus.listenPort }}
+            args:
+              - "--config.file=/etc/prometheus/prometheus.yml"
+              - "--storage.tsdb.path=/prometheus"
+              - "--storage.tsdb.retention.time=7d"
+            volumeMounts:
+              - name: config
+                mountPath: /etc/prometheus
+        volumes:
+          - name: config
+            configMap:
+              name: prometheus-configmap
+
