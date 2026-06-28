@@ -1,11 +1,16 @@
 package main
 
 import (
+	"embed"
 	"fmt"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
 )
+
+//go:embed static/*
+var staticFiles embed.FS
 
 func main() {
 
@@ -46,14 +51,30 @@ func main() {
 	// Create hub goroutine
 	go hub.Run()
 
-	// Register routes for Handlers
-	http.HandleFunc("/api/health", handler.HealthHandler)
-	http.HandleFunc("/api/metrics", handler.MetricsHandler)
-	http.HandleFunc("/api/chat", handler.ChatAPIHandler)
-	http.HandleFunc("/ws", handler.WSHandler)
+	// Serve the embedded React frontend
+	frontendFS, err := fs.Sub(staticFiles, "static")
+	if err != nil {
+		log.Fatalf("Failed to load frontend files: %v", err)
+	}
+	fileServer := http.FileServer(http.FS(frontendFS))
 
-	if err := http.ListenAndServe(fmt.Sprintf(":%s", LISTEN_PORT), nil); err != nil {
+	// Custom handler: API routes first, then static files
+	mux := http.NewServeMux()
+	mux.HandleFunc("/api/health", handler.HealthHandler)
+	mux.HandleFunc("/api/metrics", handler.MetricsHandler)
+	mux.HandleFunc("/api/chat", handler.ChatAPIHandler)
+	mux.HandleFunc("/ws", handler.WSHandler)
+	mux.Handle("/", fileServer)
+
+	fs.WalkDir(staticFiles, ".", func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		log.Printf("Embedded file: %s", path)
+		return nil
+	})
+
+	if err := http.ListenAndServe(fmt.Sprintf(":%s", LISTEN_PORT), mux); err != nil {
 		log.Fatalf("Error while starting http server - %v", err)
 	}
-
 }

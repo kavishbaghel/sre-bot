@@ -52,10 +52,10 @@ func (ch *ChatHandler) BuildSystemPrompt(ctx context.Context) string {
 	You are sre-bot, an AI-powered SRE assistant.
 
 	Current system health:
-	%v
+	%s
 
 	Recent failure summary (last 30 minutes):
-	%v
+	%s
 
 	Answer questions about system health, incidents, and infrastructure clearly and concisely.
 	`, healthStatusInfo, failureSummaryInfo)
