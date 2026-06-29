@@ -2,7 +2,7 @@ collector:
   image: sre-bot-collector
   tag: v0.1
   replicas: 1
-  scrapeTarget: http://prometheus:9090/metrics
+  scrapeTarget: http://prometheus.sre-bot-monitoring.svc.cluster.local:9090
   listenPort: 8080
   appName: sre-bot-collector
 
