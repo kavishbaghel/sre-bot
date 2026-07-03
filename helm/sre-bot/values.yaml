@@ -2,7 +2,7 @@ collector:
   image: sre-bot-collector
   tag: v0.1
   replicas: 1
-  scrapeTarget: http://prometheus.sre-bot-monitoring.svc.cluster.local:9090
+  scrapeTarget: http://prometheus.sre-bot-monitoring.svc.cluster.local:9090/metrics
   listenPort: 8080
   appName: sre-bot-collector
 
@@ -78,6 +78,12 @@ prometheus:
   image: prom/prometheus
   tag: "v2.48.0"
   listenPort: 9090
+
+grafana:
+  name: grafana
+  image: grafana/grafana
+  tag: "10.2.0"
+  listenPort: 3000
 
 
   
