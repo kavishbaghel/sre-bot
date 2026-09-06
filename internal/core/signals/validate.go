@@ -61,12 +61,7 @@ func ValidateServiceRef(sr ServiceRef) error {
 	if sr.Name == "" {
 		return errors.New("service name is required")
 	}
-	if sr.Component == "" {
-		return errors.New("service component is required")
-	}
-	if sr.ServiceType == "" {
-		return errors.New("service type is required")
-	}
+	// Removed validation for Component and ServiceType as they no longer exist in ServiceRef
 	return nil
 }
 
@@ -74,11 +69,6 @@ func ValidateResourceRef(rr ResourceRef) error {
 	if rr.Name == "" {
 		return errors.New("resource name is required")
 	}
-	if rr.Component == "" {
-		return errors.New("resource component is required")
-	}
-	if rr.ResourceType == "" {
-		return errors.New("resource type is required")
-	}
+
 	return nil
 }

@@ -26,17 +26,13 @@ const (
 )
 
 type ServiceRef struct {
-	Name        string
-	Component   string
-	ServiceType string
-	Labels      map[string]string
+	Name   string
+	Labels map[string]string
 }
 
 type ResourceRef struct {
-	Name         string
-	Component    string
-	ResourceType string
-	Labels       map[string]string
+	Name   string
+	Labels map[string]string
 }
 
 type Signal struct {
